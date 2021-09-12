@@ -23,7 +23,6 @@ import axios from 'axios';
     })
   }
   handleSubmit = (e) => {
-    console.log(`${process.env.REACT_APP_KEY}`);
     e.preventDefault();
     let config = {
       method: "GET",
@@ -46,7 +45,15 @@ import axios from 'axios';
       <div className="App">
       <h1>Welcome to City explorer</h1>
       <Formsearch handleLocation={this.handleLocation} handleSubmit={this.handleSubmit} />
-      <Location />
+      {
+          this.state.showData&&
+          <Location city_name={this.state.city_name}
+                    type={this.state.type}
+                    lat={this.state.lat}
+                    lon={this.state.lon}
+          />
+        }
+      <img src={`https://api.locationiq.com/v1/autocomplete.php?key=${process.env.REACT_APP_KEY}&center=${this.state.lon},${this.state.lat}`}/>
     </div>
   );
 
