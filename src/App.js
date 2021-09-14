@@ -53,7 +53,7 @@ import axios from 'axios';
                     lon={this.state.lon}
           />
         }
-      <img src={`https://api.locationiq.com/v1/autocomplete.php?key=${process.env.REACT_APP_KEY}&center=${this.state.lon},${this.state.lat}`}/>
+       <img src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_KEY}&center=${this.state.lat},${this.state.lon}`} fluid />
     </div>
   );
 
