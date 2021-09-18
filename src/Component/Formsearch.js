@@ -4,11 +4,11 @@ import {Form,Button} from "react-bootstrap"
     render() {
         return (
 
-          <Form onSubmit={this.props.handleSubmit}>
-             <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Control type="text" placeholder="search for location" 
+          <Form className='col-6' onSubmit={this.props.handleSubmit}>
+             <Form.Group className="row" controlId="formBasicEmail">
+            <Form.Control className='col' type="text" placeholder="search for location" 
             onChange={this.props.handleLocation}/>
-          <Button variant="primary" type="submit">
+          <Button className='col-2' variant="primary" type="submit">
             explore
           </Button>
           </Form.Group>
