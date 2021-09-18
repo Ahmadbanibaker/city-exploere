@@ -52,7 +52,7 @@ class App extends Component {
       })
     }).then( async ()  =>  {
      try {
-       let  weatherRes  = await axios.get(`http://${process.env.REACT_APP_BK_URL}/weather?key=40b469be84da46abb3eb4e5a66e789ad&lat=${this.state.lat}&lon=${this.state.lon}`)
+       let  weatherRes  = await axios.get(`${process.env.REACT_APP_BK_URL}/weather?key=40b469be84da46abb3eb4e5a66e789ad&lat=${this.state.lat}&lon=${this.state.lon}`)
 
      this.setState({
        arr: weatherRes.data,
@@ -66,7 +66,7 @@ class App extends Component {
       const cityName = this.state.city_name;
 
    try {  
-   let movieRes = await  axios.get(`http://${process.env.REACT_APP_BK_URL}/movie?api_key=74b29308bb70138feec3e94fe656d2a2&query=${cityName}`)
+   let movieRes = await  axios.get(`${process.env.REACT_APP_BK_URL}/movie?api_key=74b29308bb70138feec3e94fe656d2a2&query=${cityName}`)
    this.setState({
     showMovie:movieRes.data,
   })
