@@ -3,6 +3,9 @@ import Formsearch from './Component/Formsearch';
 import Location from './Component/Location';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
+import Movies from './Component/Movies';
+import Movie2 from './Component/Movie2';
+import Weather from './Component/Weather';
 
 
 class App extends Component {
@@ -15,9 +18,12 @@ class App extends Component {
       lon: "",
       showData: false,
       arr: [],
-      showWeather: false
+      showWeather: false,
+      showMovie:[]
     }
+
   }
+  
   handleLocation = (e) => {
     let city_name = e.target.value;
     this.setState({
@@ -25,15 +31,17 @@ class App extends Component {
 
     })
   }
-  handleSubmit = (e) => {
+  handleSubmit =  (e) => {
     e.preventDefault();
     let config = {
       method: "GET",
       baseURL: `https://api.locationiq.com/v1/autocomplete.php?key=${process.env.REACT_APP_KEY}&q=${this.state.city_name}`
     }
+    
+
     axios(config).then(res => {
       let responseData = res.data[0]
-      console.log(responseData)
+      
       this.setState({
         city_name: responseData.display_place,
         lon: responseData.lon,
@@ -42,16 +50,29 @@ class App extends Component {
         showData: true
 
       })
-    }).then(() => {
+    }).then( async ()  =>  {
+     try {
+       let  weatherRes  = await axios.get(`http://${process.env.REACT_APP_BK_URL}/weather?key=40b469be84da46abb3eb4e5a66e789ad&lat=${this.state.lat}&lon=${this.state.lon}`)
 
-      axios.get(`http://${process.env.REACT_APP_BK_URL}/weather?searchQuery=${this.state.city_name}&lat=${this.state.lat}&lon=${this.state.lon}`)
-        .then(res => {
-          this.setState({
-            arr: res.data,
-            showWeather: true
-          })
-          console.log(this.state.arr)
-        })
+     this.setState({
+       arr: weatherRes.data,
+       showWeather: true
+     })
+    }catch(e){
+         console.log(e)
+       } 
+    })
+    .then( async() => {
+      const cityName = this.state.city_name;
+
+   try {  
+   let movieRes = await  axios.get(`http://${process.env.REACT_APP_BK_URL}/movie?api_key=74b29308bb70138feec3e94fe656d2a2&query=${cityName}`)
+   this.setState({
+    showMovie:movieRes.data,
+  })
+  } catch(e){
+        console.log(e)
+      }
     })
   }
   render() {
@@ -61,18 +82,25 @@ class App extends Component {
         <Formsearch handleLocation={this.handleLocation} handleSubmit={this.handleSubmit} />
         {
           this.state.showData &&
-          <Location city_name={this.state.city_name}
+        <>  <Location city_name={this.state.city_name}
             type={this.state.type}
             lat={this.state.lat}
             lon={this.state.lon}
-          />
+          />    
+          <img alt='asjadj' src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_KEY}&center=${this.state.lat},${this.state.lon}`} fluid />
+</>
         }
-        <img alt='asjadj' src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_KEY}&center=${this.state.lat},${this.state.lon}`} fluid />
-        {this.state.showWeather && this.state.arr.map(value => {
-          return < h2>date={value.date}
-            description={value.description}</h2>
+        {
+        this.state.showWeather && 
+       
+           <Weather  weatherData={this.state.arr}  />
+                  
+        
         }
-        )}
+      <h1>Movie</h1>
+          <Movies showMovie={this.state.showMovie}/>
+         
+
 
       </div>
     )
